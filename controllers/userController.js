@@ -17,7 +17,7 @@ exports.createUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const removeThis = ["page", "limit"];
+    const removeThis = ["page", "limit", "sort"];
     let querry = { ...req.query };
     removeThis.forEach((el) => delete querry[el]);
     // Filtering :
@@ -31,8 +31,26 @@ exports.getAllUsers = async (req, res) => {
     const page = req.query.page * 1 || 1;
     const limit = req.query.limit * 1 || 5;
     const skip = (page - 1) * limit;
-
+    if (req.query.page) {
+      const nbr = await User.countDocuments();
+      if (skip >= nbr) {
+        res.status(400).json({
+          message: "you have passed the limit",
+        });
+        // console.log("aaa");
+        // throw new Error("sdfsdfsdffd");
+      }
+    }
     myRequest = myRequest.skip(skip).limit(limit);
+
+    // 3) Sorting :
+
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(",").join(" ");
+      myRequest = myRequest.sort(req.query.sort);
+    } else {
+      myRequest = myRequest.sort("-created_at");
+    }
 
     // const users = await User.find().where("name").equals(req.query.name);
 
