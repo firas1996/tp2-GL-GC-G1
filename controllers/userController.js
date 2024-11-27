@@ -47,7 +47,7 @@ exports.getAllUsers = async (req, res) => {
 
     if (req.query.sort) {
       const sortBy = req.query.sort.split(",").join(" ");
-      myRequest = myRequest.sort(req.query.sort);
+      myRequest = myRequest.sort(sortBy);
     } else {
       myRequest = myRequest.sort("-created_at");
     }
