@@ -7,8 +7,9 @@ const {
   getUserById,
   updateUser,
 } = require("../controllers/userController");
-const { signup } = require("../controllers/authController");
+const { signup, login } = require("../controllers/authController");
 router.route("/signup").post(signup);
+router.route("/login").post(login);
 router.route("/").post(createUser).get(getAllUsers);
 router.route("/:id").get(getUserById).patch(updateUser).delete(deleteUser);
 
