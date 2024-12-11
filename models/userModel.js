@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 20);
+  this.password = await bcrypt.hash(this.password, 12);
   this.confirmPassword = undefined;
   next();
 });
@@ -58,9 +58,8 @@ userSchema.methods.verifPass = async function (entredPass, cPass) {
 };
 
 userSchema.methods.validTokenDate = function (JWTDate) {
-  console.log(JWTDate);
-  console.log(this.update_pass_date);
-  return JWTDate < this.update_pass_date;
+  const dataPass = parseInt(this.update_pass_date.getTime() / 1000);
+  return JWTDate < dataPass;
 };
 
 const User = mongoose.model("User", userSchema);

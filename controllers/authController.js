@@ -11,6 +11,7 @@ const createToken = (name, id) => {
 exports.signup = async (req, res) => {
   try {
     const { name, email, password, confirmPassword, age } = req.body;
+    console.log("aaa");
     const newUser = await User.create({
       name,
       email,
@@ -92,7 +93,12 @@ exports.protectionMW = async (req, res, next) => {
     }
     // 4) thabt si el user badal el pass mte3ou ba3d ma sna3 el token ou bien lé
 
-    console.log(myUser.validTokenDate(myToken.iat));
+    if (myUser.validTokenDate(myToken.iat)) {
+      return res.status(401).json({
+        status: "fail",
+        message: "token no longer valid !!!!",
+      });
+    }
 
     next();
   } catch (error) {
