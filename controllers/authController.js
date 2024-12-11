@@ -109,9 +109,10 @@ exports.protectionMW = async (req, res, next) => {
   }
 };
 
-exports.howCanDo = (roles) => {
+exports.howCanDo = (...roles) => {
   return async (req, res, next) => {
     try {
+      console.log(roles);
       if (!roles.includes(req.user.role)) {
         return res.status(401).json({
           status: "fail",
