@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  update_pass_date: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 userSchema.pre("save", async function (next) {
@@ -51,6 +55,12 @@ userSchema.pre("save", async function (next) {
 });
 userSchema.methods.verifPass = async function (entredPass, cPass) {
   return await bcrypt.compare(entredPass, cPass);
+};
+
+userSchema.methods.validTokenDate = function (JWTDate) {
+  console.log(JWTDate);
+  console.log(this.update_pass_date);
+  return JWTDate < this.update_pass_date;
 };
 
 const User = mongoose.model("User", userSchema);

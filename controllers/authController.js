@@ -83,8 +83,16 @@ exports.protectionMW = async (req, res, next) => {
     console.log(myToken);
 
     // 3) thabat el user mizel mawjoub ou bien lé
-
+    const myUser = await User.findById(myToken.id);
+    if (!myUser) {
+      return res.status(401).json({
+        status: "fail",
+        message: "User is no longer exists !!!!",
+      });
+    }
     // 4) thabt si el user badal el pass mte3ou ba3d ma sna3 el token ou bien lé
+
+    console.log(myUser.validTokenDate(myToken.iat));
 
     next();
   } catch (error) {
