@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
 
 const createToken = (name, id) => {
   return jwt.sign({ name, id }, process.env.SECRET_KEY, {
@@ -52,6 +53,40 @@ exports.login = async (req, res) => {
       token,
       data: { user },
     });
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error,
+    });
+  }
+};
+
+exports.protectionMW = async (req, res, next) => {
+  try {
+    let token;
+    // 1) thabat si el user connecter ou bien non
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+    if (!token) {
+      return res.status(401).json({
+        status: "fail",
+        message: "you have to be logged in !!!!",
+      });
+    }
+    // 2) thabat si el token valid ou bien lé
+
+    let myToken = await promisify(jwt.verify)(token, process.env.SECRET_KEY);
+    console.log(myToken);
+
+    // 3) thabat el user mizel mawjoub ou bien lé
+
+    // 4) thabt si el user badal el pass mte3ou ba3d ma sna3 el token ou bien lé
+
+    next();
   } catch (error) {
     res.status(400).json({
       status: "fail",
