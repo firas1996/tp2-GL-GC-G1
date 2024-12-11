@@ -99,7 +99,7 @@ exports.protectionMW = async (req, res, next) => {
         message: "token no longer valid !!!!",
       });
     }
-
+    req.user = myUser;
     next();
   } catch (error) {
     res.status(400).json({
@@ -107,4 +107,23 @@ exports.protectionMW = async (req, res, next) => {
       message: error,
     });
   }
+};
+
+exports.howCanDo = (roles) => {
+  return async (req, res, next) => {
+    try {
+      if (!roles.includes(req.user.role)) {
+        return res.status(401).json({
+          status: "fail",
+          message: "you can not do this !!!!",
+        });
+      }
+      next();
+    } catch (error) {
+      res.status(400).json({
+        status: "fail",
+        message: error,
+      });
+    }
+  };
 };
