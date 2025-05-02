@@ -15,10 +15,10 @@ const {
 } = require("../controllers/authController");
 router.route("/signup").post(signup);
 router.route("/login").post(login);
-router.route("/").post(protectionMW, createUser).get(protectionMW, getAllUsers);
+router.route("/").post(protectionMW, createUser).get(getAllUsers);
 router
   .route("/:id")
-  .get(protectionMW, howCanDo("admin", "user"), getUserById)
+  .get(getUserById)
   .patch(protectionMW, updateUser)
   .delete(protectionMW, howCanDo("admin"), deleteUser);
 
